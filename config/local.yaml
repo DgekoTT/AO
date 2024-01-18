@@ -1,0 +1,14 @@
+env: "local"
+grpc:
+  port: 44044
+  timeout: 5s
+token_options:
+  token_refresh_ttl: 200h
+  token_access_ttl: 30m
+  token_verification_ttl: 24h
+database:
+  host: "localhost"
+  port: 5433
+  user: "postgres"
+  password: "destro"
+  dbname: "authpro"
