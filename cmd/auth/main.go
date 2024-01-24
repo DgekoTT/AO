@@ -3,6 +3,9 @@ package main
 import (
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
+	"yourTeamAuth/internal/app"
 	"yourTeamAuth/internal/config"
 )
 
@@ -18,6 +21,21 @@ func main() {
 	log := setupLogger(cfg.Env)
 
 	log.Info("Starting application", slog.String("env", cfg.Env))
+
+	application := app.New(log, cfg.GRPC.Port)
+
+	application.GRPCSrv.MustRun()
+
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
+
+	sign := <-stop
+
+	log.Info("stopping application", slog.String("signal", sign.String()))
+
+	application.GRPCSrv.Stop()
+
+	log.Info("application stopped")
 }
 
 func setupLogger(env string) *slog.Logger {
