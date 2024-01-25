@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS user_roles;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS oauth_providers;
+DROP TABLE IF EXISTS verify_infos;
+DROP INDEX IF EXISTS idx_email;
+DROP TABLE IF EXISTS users;

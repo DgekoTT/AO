@@ -16,7 +16,7 @@ func main() {
 	flag.StringVar(&storagePath, "storage-path", "", "path to storage")
 	flag.StringVar(&migrationsPath, "migrations-path", "", "path to migrations")
 	flag.StringVar(&migrationsTable, "migrations-table", "migrations", "name of migrations table")
-	flag.StringVar(&down, "down", "", "migration down")
+	flag.StringVar(&down, "down", "", "migrations down")
 	flag.Parse()
 
 	if storagePath == "" {
@@ -41,7 +41,7 @@ func main() {
 			}
 			panic(err)
 		}
-		fmt.Println("migration down")
+		fmt.Println("migrations down")
 		return
 	}
 	if err := m.Up(); err != nil {
