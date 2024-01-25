@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"time"
 	"yourTeamAuth/internal/domain/models"
+	jwtM "yourTeamAuth/internal/lib/jwt"
 	"yourTeamAuth/storage"
 )
 
@@ -111,12 +112,12 @@ func (a *Auth) Login(ctx context.Context, email, password string) (string, strin
 
 	log.Info("User logged in successfully")
 
-	accessToken, err := jwt.NewAccessToken(user, a.JWTAccessTTL)
+	accessToken, err := jwtM.NewAccessToken(user, a.JWTAccessTTL)
 	if err != nil {
 		log.Warn("failed to create access token", err)
 		return "0", "0", "0", fmt.Errorf("%s : %w", op, ErrInvalidCredentials)
 	}
-	refreshToken, err := jwt.NewRefreshToken(user, a.JWTRefreshTTL)
+	refreshToken, err := jwtM.NewRefreshToken(user, a.JWTRefreshTTL)
 	if err != nil {
 		log.Warn("failed to create refresh token", err)
 		return "0", "0", "0", fmt.Errorf("%s : %w", op, ErrInvalidCredentials)
