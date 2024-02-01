@@ -11,4 +11,4 @@ database:
   port: 5433
   user: "postgres"
   password: "destro"
-  dbname: "authpro"
+  dbname: "userAuth"

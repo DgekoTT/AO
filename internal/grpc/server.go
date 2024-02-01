@@ -2,10 +2,13 @@ package grpc
 
 import (
 	"context"
+	"errors"
 	authv1 "github.com/DgekoTT/protos/gen/go/auth"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"yourTeamAuth/internal/services/auth"
+	"yourTeamAuth/storage"
 )
 
 type Auth interface {
@@ -38,6 +41,9 @@ func Register(gRPC *grpc.Server, auth Auth) {
 func (s *serverAPI) Register(ctx context.Context, req *authv1.RegisterRequest) (*authv1.RegisterResponse, error) {
 	userID, err := s.auth.RegisterNewUser(ctx, req.GetEmail(), req.GetPassword())
 	if err != nil {
+		if errors.Is(err, storage.ErrUserExists) {
+			return nil, status.Error(codes.AlreadyExists, "user already exists")
+		}
 		return nil, status.Error(codes.Internal, "internal error")
 	}
 
@@ -50,6 +56,9 @@ func (s *serverAPI) Login(ctx context.Context, req *authv1.LoginRequest) (*authv
 	accessToken, refreshToken, userID, err := s.auth.Login(ctx, req.GetEmail(), req.GetPassword())
 
 	if err != nil {
+		if errors.Is(err, auth.ErrInvalidCredentials) {
+			return nil, status.Error(codes.InvalidArgument, "unable login")
+		}
 		return nil, status.Errorf(codes.Internal, "internal error")
 	}
 

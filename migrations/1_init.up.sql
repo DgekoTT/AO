@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS user_roles (
 CREATE TABLE IF NOT EXISTS verify_infos (
     UserID uuid PRIMARY KEY,
     verificationToken TEXT,
+    isVerified BOOL,
     FOREIGN KEY (UserID) REFERENCES users (ID)
     );
 

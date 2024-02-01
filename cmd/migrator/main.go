@@ -4,8 +4,8 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-
 	"github.com/golang-migrate/migrate/v4"
+
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
@@ -25,7 +25,7 @@ func main() {
 	if migrationsPath == "" {
 		panic("migrations-path is required")
 	}
-	databaseUrl := "postgres://postgres:destro@localhost:5433/userAu?sslmode=disable"
+	databaseUrl := "postgres://postgres:destro@localhost:5433/userAuth?sslmode=disable"
 	m, err := migrate.New(
 		"file://"+migrationsPath,
 		databaseUrl,

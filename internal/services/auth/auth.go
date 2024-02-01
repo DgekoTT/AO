@@ -36,6 +36,7 @@ type UserSaver interface {
 type UserProvider interface {
 	User(ctx context.Context, email string) (models.Users, error)
 	IsAdmin(ctx context.Context, userID string) (bool, error)
+	Logout(ctx context.Context, accessToken string, refreshToken string) (bool, string, error)
 }
 
 func NewAuth(
@@ -144,4 +145,8 @@ func (a *Auth) IsAdmin(ctx context.Context, userID string) (bool, error) {
 	}
 
 	return res, nil
+}
+
+func (a *Auth) Logout(ctx context.Context, accessToken string, refreshToken string) (bool, string, error) {
+	return true, accessToken, nil
 }

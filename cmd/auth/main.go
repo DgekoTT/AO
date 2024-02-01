@@ -22,7 +22,7 @@ func main() {
 
 	log.Info("Starting application", slog.String("env", cfg.Env))
 
-	application := app.New(log, cfg.GRPC.Port)
+	application := app.New(log, cfg.GRPC.Port, &cfg.Database, cfg.Options.JWTRefreshTTL, cfg.Options.JWTAccessTTL, cfg.Options.JWTVerificationTTL)
 
 	application.GRPCSrv.MustRun()
 
