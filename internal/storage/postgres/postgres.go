@@ -104,8 +104,8 @@ func (p *Postgres) CheckEmail(ctx context.Context, tx *sqlx.Tx, email string) (b
 func (p *Postgres) CreateUser(ctx context.Context, tx *sqlx.Tx, email, provider string, hashedPassword []byte) (string, error) {
 
 	var userID string
-
-	err := tx.QueryRowContext(ctx, `INSERT INTO users (email, registrationProvider, hashedPassword) VALUES ($1, $2, $3) RETURNING ID`, email, provider, hashedPassword).Scan(&userID)
+	fmt.Println(hashedPassword)
+	err := tx.QueryRowContext(ctx, `INSERT INTO users (email, registrationProvider, hashedpassword) VALUES ($1, $2, $3) RETURNING ID`, email, provider, hashedPassword).Scan(&userID)
 	if err != nil {
 		return "0", fmt.Errorf("failed to create user: %w", err)
 	}
@@ -136,7 +136,21 @@ func (p *Postgres) User(ctx context.Context, email string) (models.Users, error)
 }
 
 func (p *Postgres) IsAdmin(ctx context.Context, userID string) (bool, error) {
-	return true, nil
+	var res bool
+
+	err := p.db.GetContext(ctx, &res, `
+		SELECT EXISTS(
+			SELECT 1
+			FROM user_roles
+			WHERE UserID = $1 AND RoleID = 1
+		)
+`, userID)
+
+	if err != nil {
+		return false, fmt.Errorf("failed to get user role: %w", err)
+	}
+
+	return res, nil
 }
 
 func (p *Postgres) Logout(ctx context.Context, accessToken string, refreshToken string) (bool, string, error) {

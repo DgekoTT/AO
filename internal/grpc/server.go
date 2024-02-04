@@ -22,6 +22,9 @@ type Auth interface {
 		email string,
 		password string,
 	) (userID string, err error)
+	IsAdmin(
+		ctx context.Context,
+		userID string) (isAdmin bool, err error)
 	Logout(
 		ctx context.Context,
 		accessToken, refreshToken string,
@@ -78,5 +81,19 @@ func (s *serverAPI) LogOut(ctx context.Context, req *authv1.LogOutRequest) (*aut
 
 	return &authv1.LogOutResponse{
 		Success: success,
-		Message: messageS}, nil
+		Message: messageS,
+	}, nil
+}
+
+func (s *serverAPI) IsAdmin(ctx context.Context, req *authv1.IsAdminRequest) (*authv1.IsAdminResponse, error) {
+	res, err := s.auth.IsAdmin(ctx, req.GetUserId())
+	if err != nil {
+		return &authv1.IsAdminResponse{
+			IsAdmin: false,
+		}, status.Errorf(codes.Internal, "internal error")
+	}
+
+	return &authv1.IsAdminResponse{
+		IsAdmin: res,
+	}, nil
 }
