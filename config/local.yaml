@@ -7,8 +7,8 @@ token_options:
   token_access_ttl: 30m
   token_verification_ttl: 24h
 database:
-  host: "localhost"
-  port: 5433
-  user: "postgres"
-  password: "destro"
+  host: "postgres"
+  port: 5432
+  user: "admin"
+  password: "wsde"
   dbname: "userAuth"
